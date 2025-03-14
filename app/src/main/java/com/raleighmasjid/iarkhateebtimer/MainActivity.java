@@ -25,10 +25,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
 public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickListener{
     private static final String FORMAT = "%02d:%02d";
     private String shift = "";
@@ -159,8 +155,8 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
 
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(new Date());
-                        final boolean friday = cal.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY;
-                        if (friday || TESTING) {
+                        final boolean isFriday = cal.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY;
+                        if (isFriday || TESTING) {
 
                             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                             String currentTime = sdf.format(new Date());
@@ -213,12 +209,10 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
     }
 
     private void startTimer() {
-        Log.d("startTimer", "TIMER COUNTDOWN STARTED! " + shift + " Shift, Mins="+ (TIMER_COUNTDOWN_LENGTH/60000));
-
         if (timer == null) {
             text1.setText(shift + " Shift");
             text3.setText("");
-            timer = new CountDownTimer(!TESTING ? TIMER_COUNTDOWN_LENGTH: KhateebTimesHelper.TIME01, 1000) {
+            timer = new CountDownTimer(TIMER_COUNTDOWN_LENGTH, 1000) {
 
                 boolean blink = true;
                 public void onTick(long millisUntilFinished) {
@@ -250,7 +244,6 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
                                 TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(
                                         TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
                     }
-
                 }
 
                 public void onFinish() {
@@ -264,12 +257,12 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
     }
 
     private void startSalahWarningTimer() {
-        Log.d("post-Timer", "TIMER COUNTDOWN EXPIRED!  Displaying Salah! for " + shift + " Shift");
+        Log.d("startSalahWarningTimer()", "TIMER COUNTDOWN EXPIRED!  Displaying Salah! for " + shift + " Shift");
         CountDownTimer fiveTime = new CountDownTimer(!TESTING ? KhateebTimesHelper.TIME05:KhateebTimesHelper.TIME01, 1000) {
             boolean blink = true;
             public void onTick(long millisUntilFinished) {
                 if (blink) {
-                    text2.setText(R.string.text_salah);
+                    text2.setText(R.string.txt_salah);
                     blink = false;
                 }
                 else {
@@ -282,6 +275,10 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
             public void onFinish() {
                 text2.setText("");
                 text3.setText("");
+                if(TESTING){
+                    text3.setText(R.string.test_statustxt);
+                    text1.setText(R.string.txt_kt);
+                }
             }
         }.start();
     }
@@ -317,10 +314,10 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
                 public void onClick(DialogInterface dialogInterface, int i) {
                 }
             });
-            dialog.setPositiveButton("Sync Times", new DialogInterface.OnClickListener() {
+            dialog.setPositiveButton("Sync IAR Khutbah Times", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     MainActivity.this.refreshKhutbahTimes();
-                    Toast.makeText(MainActivity.this, "Syncing times from website...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Syncing times from IAR website...", Toast.LENGTH_SHORT).show();
                 } });
             dialog.show();
             return true;
@@ -328,7 +325,7 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
 
         // tapped on Set Timer Length menu option
         else if(menuItem.getItemId() == R.id.menu_timerLength) {
-            dialog.setTitle("Khutba Timer Length");
+            dialog.setTitle("Khutbah Timer Length");
             int currTimerLength = MainActivity.this.KTHelper.getTIMER_COUNTDOWN_LENGTH()/60000;
             message = "Current Countdown (mins): "+ (currTimerLength);
 
@@ -384,20 +381,6 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
                 public void onClick(DialogInterface dialogInterface, int i) {
                 }
             });
-            dialog.setPositiveButton(!TESTING?"Enable Test Mode":"Trigger Timer", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    if(!MainActivity.this.TESTING) {
-                        MainActivity.this.TESTING = true;
-                        int currTimerLength = MainActivity.this.KTHelper.getTIMER_COUNTDOWN_LENGTH() / 60000;
-                        text1.setText("Khateeb Timer");
-                        //text2.setText(""+currTimerLength+":00");
-                        text2.setText(R.string.text_salah);
-                        text3.setText("In test mode - exit app to reset");
-                    }
-                    else {
-                        MainActivity.this.startTimer();
-                    }
-                } });
 
             dialog.show();
             return true;

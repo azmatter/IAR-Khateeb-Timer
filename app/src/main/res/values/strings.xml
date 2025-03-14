@@ -2,7 +2,8 @@
     <string name="app_name">IAR Khateeb Timer</string>
     <string name="app_tag">IARKhateebTimer</string>
     <string name="title_activity_main">IAR Khateeb Timer</string>
-    <string name="text_salah">Salah!</string>
+    <string name="txt_salah">Salah!</string>
+    <string name="txt_kt">Khateeb Timer</string>
     <string name="test_textview1">Test Shift</string>
-    <string name="test_textview3">App is in Test Mode. Current Set Timer:</string>
+    <string name="test_statustxt">App is in test mode - exit app to reset</string>
 </resources>
