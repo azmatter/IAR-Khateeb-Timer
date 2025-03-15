@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -372,10 +373,44 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
             }
             message += "App version: "+pkgInfo.versionCode;
             message += "\nBuild: "+pkgInfo.versionName;
-            message += "\nTest Mode: " + MainActivity.this.TESTING;
             message += "\nContact: "+ "repair@islam1.org";
 
+            if(TESTING) {
+                message += "\nTest Mode: " + TESTING;
+                DisplayMetrics metrics = getResources().getDisplayMetrics();
+                float dense = metrics.density;
+                message += "\nDisplay: " + dense + " ";
+                message += dense==0.75?"ldpi":dense==1.0?"mdpi":dense==1.5?"hdpi":dense==2.0?"xhdpi":dense==3.0?"xxhdpi":dense==4.0?"xxhdpi":"";
+            }
+
             dialog.setMessage(message);
+
+            dialog.setNeutralButton(!TESTING?"Enable Test Mode":"Disable Test Mode", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if(!MainActivity.this.TESTING) {
+                        TESTING = true;
+                        MainActivity.this.TESTING = true;
+                        int currTimerLength = MainActivity.this.KTHelper.getTIMER_COUNTDOWN_LENGTH() / 60000;
+                        text1.setText("Khateeb Timer");
+                        text2.setText(R.string.txt_salah);
+                        text3.setText("In test mode - exit app to reset");
+                    }
+                    else {
+                        TESTING = false;
+                        text1.setText("Khateeb Timer");
+                        text2.setText("");
+                        text3.setText(statusMsg);
+                    }
+                } });
+
+            if(TESTING){
+/*            dialog.setPositiveButton("Trigger Timer", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    MainActivity.this.startTimer();
+                }
+            });
+ */           }
+
 
             dialog.setNegativeButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
