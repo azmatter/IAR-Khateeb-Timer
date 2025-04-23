@@ -44,7 +44,7 @@ public class KhateebTimesHelper {
      * @return string array of times, each formatted as "HH:MM"
      */
     public String[] parseKhutbaTimesFromAPI(){
-        TAG = "parseKhutbaTimesFromAPI";
+        TAG = "KTH.parseKhutbaTimesFromAPI()";
         String [] goodTimes = null;
         String data = null;
 
@@ -85,7 +85,7 @@ public class KhateebTimesHelper {
      */
     public String[] parseKhutbaTimesFromWeb() {
 
-        TAG = "parseKhutbaTimesFromWeb";
+        TAG = "KTH.parseKhutbaTimesFromWeb()";
         String[] shiftTimes = null;
         boolean parserError = false;
 
@@ -144,7 +144,7 @@ public class KhateebTimesHelper {
     }
 
     public String getLastSyncTime(){
-        TAG = "getLastSyncTime";
+        TAG = "KTH.getLastSyncTime()";
         SharedPreferences sharedPreferences = MainActivity.getPreferences(Context.MODE_PRIVATE);
         String ret = sharedPreferences.getString("lastSyncTime","");
         Log.d(TAG,"stored lastSyncTime="+ret);
@@ -153,17 +153,17 @@ public class KhateebTimesHelper {
 
     // This is where the default timer countdown length will be initialized.
     public int getTIMER_COUNTDOWN_LENGTH(){
-        TAG = "getTimerLength";
+        TAG = "KTH.getTimerLength()";
         SharedPreferences sharedPreferences = MainActivity.getPreferences(Context.MODE_PRIVATE);
         int ret = sharedPreferences.getInt("countdownLength",TIME20);
-        Log.d(TAG,"countdownLength setting (mins): " + ret/60000);
+        Log.d(TAG,"stored timer length setting: " + ret/60000 + " mins");
         return ret;
     }
 
     public void setNewTIMER_COUNTDOWN_LENGTH(int newMins){
-        TAG = "setNewTimerLength";
+        TAG = "KTH.setNewTimerLength()";
         int newTime = newMins*60000;
-        Log.i(TAG, "Updating COUNTDOWN TIMER LENGTH\noldLength=" + this.TIMER_COUNTDOWN_LENGTH/60000 + ", newLength="+newMins);
+        Log.d(TAG, "Updating COUNTDOWN TIMER LENGTH\noldLength=" + this.TIMER_COUNTDOWN_LENGTH/60000 + ", newLength="+newMins);
 
         // update instance variable
         this.TIMER_COUNTDOWN_LENGTH = newTime;
@@ -176,7 +176,7 @@ public class KhateebTimesHelper {
     }
 
     public void storeTimesLocally(String [] times, String lastSyncTime){
-        TAG = "storeTimesLocally";
+        TAG = "KTH.storeTimesLocally()";
         SharedPreferences sharedPreferences = MainActivity.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor sp = sharedPreferences.edit();
         StringBuilder sb = new StringBuilder();
@@ -196,7 +196,7 @@ public class KhateebTimesHelper {
 
         boolean tf = sp.commit();
         if(tf)
-            Log.i(TAG,"Successfull wrote times to sharedPreferences");
+            Log.d(TAG,"Successfully wrote times to sharedPreferences");
         else Log.e(TAG, "Error while writing times to sharedPreferences");
 
     }
@@ -205,7 +205,7 @@ public class KhateebTimesHelper {
         Provides stored times as backup in case getKhutbaTimesFromWeb() is unable to read the masjid website.
      */
     public String[] getStoredTimes() {
-        TAG = "getStoredTimes";
+        TAG = "KTH.getStoredTimes()";
         String [] goodTimes;
         int numShifts = 0;
         String str="";

@@ -74,13 +74,18 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         });
 
         setDisplay("","Khateeb Timer");
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        Log.d(TAG,"onStart()");
 
         //Initialize instance variables
         KTHelper = new KhateebTimesHelper(this);
         TIMER_COUNTDOWN_LENGTH = KTHelper.getTIMER_COUNTDOWN_LENGTH();
         lastSyncTime = KTHelper.getLastSyncTime();
         refreshKhutbahTimes();
-
     }
 
     private void setDisplay(String txt_timer, String txt_sub) {
@@ -347,6 +352,7 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
                     try {
                         int newtimer = Integer.parseInt(input);
                         MainActivity.this.KTHelper.setNewTIMER_COUNTDOWN_LENGTH(newtimer);
+                        MainActivity.this.onStart();
                         Toast.makeText(MainActivity.this, "Updating timer countodwn...", Toast.LENGTH_SHORT).show();
                     }
                     catch (NumberFormatException e){
